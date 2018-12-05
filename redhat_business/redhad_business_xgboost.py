@@ -164,7 +164,7 @@ def train_all_data(train, features):
     X_train, X_valid = train_test_split(
         train, test_size=test_size, random_state=random_state)
     y_train = X_train[target]
-    y_valid = X_valid[target]
+    # y_valid = X_valid[target]
     dtrain = xgb.DMatrix(X_train[features], y_train)
     # dvalid = xgb.DMatrix(X_valid[features], y_valid)
 
@@ -181,17 +181,16 @@ def train_all_data(train, features):
 
 def create_submission(score, test, prediction):
     now = datetime.datetime.now()
-    sub_file = 'submission_' + \
-        str(score) + '_' + str(now.strftime("%Y-%m-%d-%H-%M")) + '.csv'
+    sub_file = "submission_{}_{}.csv".format(
+        score, now.strftime("%Y-%m-%d-%H-%M"))
     print('Writing submission: ', sub_file)
     f = open(sub_file, 'w')
     f.write('activity_id,outcome\n')
     total = 0
     for id in test['activity_id']:
-        str1 = str(id) + ',' + str(prediction[total])
-        str1 += '\n'
+        line = "{},{}\n".format(id, prediction[total])
         total += 1
-        f.write(str1)
+        f.write(line)
     f.close()
 
 
