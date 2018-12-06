@@ -91,7 +91,7 @@ def data_preprocessing():
 def train_adjust(train, features):
     target = 'outcome'
     random_state = 0  # 设定一个随机数
-    eta = 0.6         # 学习率
+    eta = 0.3         # 学习率
     max_depth = 5     # 最大学习深度，如果过拟合，也就是模型复杂度复杂了，应该调小一些
     subsample = 0.5   # 子采样(chouyang)
     colsample_bytree = 1    # 列采样
