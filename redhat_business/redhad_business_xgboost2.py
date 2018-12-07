@@ -94,8 +94,8 @@ def train_adjust(train, features):
     random_state = 0  # 设定一个随机数
     eta = 0.2         # 学习率
     max_depth = 8     # 最大学习深度，如果过拟合，也就是模型复杂度复杂了，应该调小一些
-    subsample = 0.5   # 子采样(chouyang)
-    colsample_bytree = 1    # 列采样
+    subsample = 0.7   # 子采样(chouyang)
+    colsample_bytree = 0.8    # 列采样
     start_time = time.time()
 
     print("XGBoost trian start...")
