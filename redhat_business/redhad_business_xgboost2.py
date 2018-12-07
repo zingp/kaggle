@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # coding: utf-8
+
+import time
+import random
+import datetime
+
 import pandas as pd
 import numpy as np
-import datetime
+import xgboost as xgb
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
-import xgboost as xgb
-import random
-from operator import itemgetter
-import time
+
 pd.set_option('display.max_columns', 90)  # 用于列显示不全的情况
 random.seed(0)
 
@@ -94,8 +96,8 @@ def train_adjust(train, features):
     random_state = 0  # 设定一个随机数
     eta = 0.2         # 学习率
     max_depth = 8     # 最大学习深度，如果过拟合，也就是模型复杂度复杂了，应该调小一些
-    subsample = 0.7   # 子采样(chouyang)
-    colsample_bytree = 0.8    # 列采样
+    subsample = 0.5   # 子采样(chouyang)
+    colsample_bytree = 1    # 列采样
     start_time = time.time()
 
     print("XGBoost trian start...")
@@ -111,7 +113,7 @@ def train_adjust(train, features):
         "silent": 1,             # 静默的输出，不希望输出设为1
         "seed": random_state,
     }
-    num_boost_round = 1000       # 最重要的参数轮次，需要迭代多少轮次，有多少颗树
+    num_boost_round = 2000       # 最重要的参数轮次，需要迭代多少轮次，有多少颗树
     early_stopping_rounds = 10   # 如果测试集10次都不提高，就停止；也就是训练误差开始上升时结束
     test_size = 0.5
 
@@ -158,7 +160,7 @@ def train_all_data(train, features):
         "silent": 1,
         "seed": random_state,
     }
-    num_boost_round = 465
+    num_boost_round = 1547
     early_stopping_rounds = 10
     test_size = 0.5
 
@@ -195,14 +197,19 @@ def create_submission(score, test, prediction):
     f.close()
 
 
-def gene_submission(test, features, model_name):
+def gene_submission(test, features, model_name, score):
     gbm = xgb.Booster(model_file=model_name)
-    score = '0.98'
     test_prediction = gbm.predict(xgb.DMatrix(test[features]))
     create_submission(score, test, test_prediction)
 
 
 if __name__ == "__main__":
-    # 读取数据  训练模型
+    # 读取数据
     train, test, features = data_preprocessing()
+    # 找到合适的num_boost_round
     train_adjust(train, features)
+    # 训练并保存模型
+    # train_all_data(train, features)
+    # 生成提交文件
+    # score = "0.965"
+    # gene_submission(test, features, "", score)
