@@ -120,3 +120,4 @@ dmypy.jsoni
 # data file
 *.csv
 *.DS_Store
+data/
